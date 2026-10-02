@@ -39,6 +39,14 @@
       "component": "MotionProgress"
     },
     {
+      "id": "chapter-summary-badge",
+      "intent": "reveal",
+      "target": "ChapterSummaryBadge",
+      "trigger": "Chapter summary opens after the final lesson is completed",
+      "component": "MotionReveal",
+      "preset": "celebration"
+    },
+    {
       "id": "chapter-complete",
       "intent": "celebrate",
       "target": "ChapterCompletionAction",

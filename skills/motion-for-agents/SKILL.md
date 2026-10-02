@@ -17,15 +17,15 @@ If the user requests a preview or comparison before app changes, demonstrate the
 
 ## Implement the smallest coherent change
 
-Use a stable `MotionProvider` and preserve the app's CSS. Prefer provided components; use `getMotionRecipe` for a custom semantic wrapper. Apply supported component presets only when the interaction benefits from an exception.
+Use a stable `MotionProvider` and preserve the app's CSS. Prefer provided components; use `getMotionRecipe` for a custom semantic wrapper. `MotionSwitch` makes outgoing content inert during its exit, so a repeated click cannot repeat the action. Apply supported component presets only when the interaction benefits from an exception.
 
 Follow system reduced motion with `reducedMotion="user"`, or use `always` when requested. Pass resolved settings to custom recipes. Keep essential information and next actions available without movement. Preserve immediate query output and responsive typing.
 
-Celebration is a bounded one-shot accent: increment its numeric trigger for the relevant milestone. Do not trigger on mount or repeat it with a timer.
+Celebration is a bounded one-shot accent: increment its numeric trigger for the relevant milestone. When the milestone itself opens a new view, pass the earlier value as `previousTrigger` so that view bursts once on mount. Never fire on an ordinary mount or repeat it with a timer.
 
 ## Plan and verify
 
-For multiple boundaries, a JSON plan can record preset, reduced-motion policy, target, concrete trigger, intent, and component. The v0.1 schema has no custom duration field. In the source repository, validate a plan with `npm run plan:validate -- path/to/plan.json`. `npm run agent:check` validates the catalog and committed example plans.
+For multiple boundaries, a JSON plan can record preset, reduced-motion policy, target, concrete trigger, intent, component, and an optional per-transition preset override (not for `celebrate`). The v0.1 schema has no custom duration field. In an app that installed the package, validate a plan with `npx --no motion-for-agents-validate path/to/plan.json`; in the source repository, use `npm run plan:validate -- path/to/plan.json`. `npm run agent:check` validates the catalog and committed example plans.
 
 Check keyboard operation, reduced motion, state preservation, disabled controls, and essential content. Confirm that `MotionSwitch` does not remount an editor or discard important input. Run relevant app checks and review the interaction; plan validation alone proves only structure and vocabulary.
 

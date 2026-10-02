@@ -8,7 +8,8 @@ This is an early React source repository and local playground. The package is `@
 
 - Keep public types, exports, `motion.catalog.json`, plan schema, README, API guide, and bundled skill consistent when changing the API.
 - The three presets are `quiet`, `spring`, and `celebration`. Recipe intents are `reveal`, `navigate`, `feedback`, and `press`. Plans also accept `progress` and `celebrate` for their dedicated components.
-- The v0.1 plan format deliberately has no custom duration field. A plan describes work; it does not grant permission to perform it.
+- The v0.1 plan format deliberately has no custom duration field; a transition may only override the preset, and not for `celebrate`. A plan describes work; it does not grant permission to perform it.
+- The plan validator ships as the `motion-for-agents-validate` command, so `ajv` is a runtime dependency and its scripts are listed in the package `files`.
 - Keep the library unstyled. Consumer CSS controls layout, color, typography, and decoration; the playground can supply its own visual design.
 - Do not add an animation framework or replace the Motion dependency without a concrete need.
 
@@ -16,9 +17,9 @@ This is an early React source repository and local playground. The package is `@
 
 Favor useful feedback and clear transitions. Keep essential content available without animation. Respect system reduced-motion preferences and the provider's `always` override.
 
-Keep stateful editors, input focus, and scroll stable. Animate a wrapper or adjacent feedback rather than remounting an editor to replay a transition. `MotionSwitch` is for content that may safely remount when its transition key changes.
+Keep stateful editors, input focus, and scroll stable. Animate a wrapper or adjacent feedback rather than remounting an editor to replay a transition. `MotionSwitch` is for content that may safely remount when its transition key changes. Its outgoing content stays inert during the exit so a repeated click cannot reach it.
 
-Celebration must stay bounded and run once per increasing numeric trigger. Do not start particles during initial render or create background loops. Progress values use a 0–100 range and must handle out-of-range and non-finite input.
+Celebration must stay bounded and run once per increasing numeric trigger. Start particles on mount only when the caller passes a lower `previousTrigger`, and never create background loops. Progress values use a 0–100 range and must handle out-of-range and non-finite input.
 
 ## Verification
 

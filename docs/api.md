@@ -90,7 +90,9 @@ Switches content when `transitionKey: string | number` changes. Accepts children
 </MotionSwitch>
 ```
 
-Changing the key can remount the switched subtree. Keep a stateful editor or persistent form outside this boundary. Use an action-specific key rather than a timestamp or a value that changes on every keystroke.
+Changing the key can remount the switched subtree. Keep a stateful editor or persistent form outside this boundary.
+
+While the old content exits, it is inert: it ignores pointer and keyboard input, cannot take focus, and is hidden from assistive technology. A quick second click therefore cannot repeat the action that replaced it. Use an action-specific key rather than a timestamp or a value that changes on every keystroke.
 
 ### MotionFeedback
 
@@ -139,7 +141,7 @@ Include visible numeric or explanatory text nearby when it helps the user interp
 
 ### MotionCelebration
 
-A bounded, one-shot particle accent with `trigger: number`, optional children, and `className`. It runs only when a finite trigger increases from its previous finite value, not on initial render, a decrease, or an invalid number. It has no preset override. Do not update the trigger during rendering or from a repeating timer.
+A bounded, one-shot particle accent with `trigger: number`, optional `previousTrigger: number`, optional children, and `className`. It runs when a finite trigger increases from its previous finite value while mounted. It does not run on an ordinary initial render, a decrease, or an invalid number. It has no preset override. Do not update the trigger during rendering or from a repeating timer.
 
 ```tsx
 import { useState } from 'react';
@@ -157,6 +159,16 @@ function CompletionAction() {
   );
 }
 ```
+
+When the milestone itself opens a new view, such as an exam result screen, that view mounts with the trigger already increased. Pass the earlier value as `previousTrigger` to burst once on mount:
+
+```tsx
+<MotionCelebration trigger={levelsPassed} previousTrigger={levelsPassedBeforeExam}>
+  <h1>Level passed</h1>
+</MotionCelebration>
+```
+
+Keep `previousTrigger` tied to the milestone event rather than recomputing it on every visit, so returning to the view does not replay the burst.
 
 Keep the actual completion message and next action available independently of the particles.
 

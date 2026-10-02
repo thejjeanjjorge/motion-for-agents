@@ -204,6 +204,17 @@ describe("keyed navigation", () => {
     await waitFor(() => expect(screen.queryByText("First question")).toBeNull());
     expect(screen.getByText("Second question")).toBeTruthy();
   });
+
+  it("makes outgoing content inert so a repeated click cannot reach it", async () => {
+    const onClick = vi.fn();
+    const { rerender } = render(<MotionSwitch transitionKey={1}><button onClick={onClick}>Finish exam</button></MotionSwitch>);
+    const outgoing = screen.getByRole("button", { name: "Finish exam" }).parentElement!;
+    expect(outgoing.hasAttribute("inert")).toBe(false);
+    rerender(<MotionSwitch transitionKey={2}><p>Exam result</p></MotionSwitch>);
+    expect(outgoing.hasAttribute("inert")).toBe(true);
+    await waitFor(() => expect(screen.queryByText("Finish exam")).toBeNull());
+    expect(screen.getByText("Exam result").parentElement!.hasAttribute("inert")).toBe(false);
+  });
 });
 
 describe("finite celebration", () => {
@@ -211,6 +222,34 @@ describe("finite celebration", () => {
     const { container } = render(<StrictMode><MotionCelebration trigger={3}>Passed</MotionCelebration></StrictMode>);
     expect(container.querySelector("[data-motion-celebration]")).toBeNull();
     expect(screen.getByText("Passed")).toBeTruthy();
+  });
+
+  it("bursts once on mount when the milestone raised the trigger, including Strict Mode", () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+    const { container, rerender } = render(
+      <StrictMode><MotionCelebration trigger={3} previousTrigger={2}>Level passed</MotionCelebration></StrictMode>,
+    );
+    const burst = container.querySelector("[data-motion-celebration]");
+    expect(burst?.children.length).toBe(12);
+    rerender(<StrictMode><MotionCelebration trigger={3} previousTrigger={2}>Level passed</MotionCelebration></StrictMode>);
+    expect(container.querySelector("[data-motion-celebration]")).toBe(burst);
+    act(() => vi.advanceTimersByTime(1000));
+    expect(container.querySelector("[data-motion-celebration]")).toBeNull();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it.each([
+    ["an equal", 3], ["a higher", 4], ["an invalid", Number.NaN],
+  ])("does not burst on mount from %s previous trigger", (_label, previousTrigger) => {
+    const { container } = render(<MotionCelebration trigger={3} previousTrigger={previousTrigger} />);
+    expect(container.querySelector("[data-motion-celebration]")).toBeNull();
+  });
+
+  it("does not burst on mount under reduced motion", () => {
+    const { container } = render(
+      <MotionProvider reducedMotion="always"><MotionCelebration trigger={1} previousTrigger={0} /></MotionProvider>,
+    );
+    expect(container.querySelector("[data-motion-celebration]")).toBeNull();
   });
 
   it("fires once per increasing trigger and removes the decorative burst", () => {

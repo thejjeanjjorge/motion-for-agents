@@ -18,6 +18,22 @@ test('preset and reduced-motion controls retain lesson progress', async ({ page 
   expect(errors).toEqual([]);
 });
 
+test('outgoing switched content is inert until its exit finishes', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Find products under $50' })).toBeVisible();
+  const outgoingWasInert = await page.evaluate(async () => {
+    const heading = [...document.querySelectorAll('h3')].find(item => item.textContent === 'Find products under $50');
+    const next = [...document.querySelectorAll('button')].find(item => item.textContent?.includes('Next question'));
+    next?.click();
+    await new Promise(requestAnimationFrame);
+    return Boolean(heading?.isConnected && heading.closest('[inert]'));
+  });
+  expect(outgoingWasInert).toBe(true);
+  await expect(page.getByRole('heading', { name: 'Find the newest customers' })).toBeVisible();
+  await expect(page.locator('[inert]')).toHaveCount(0);
+});
+
 test('native keyboard activation and tab navigation work', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('tab', { name: 'Learning flow' }).focus();

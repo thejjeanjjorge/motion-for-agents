@@ -70,7 +70,7 @@
       "requiredProps": [
         "transitionKey"
       ],
-      "stateBoundary": "Only outgoing and incoming children remount; keep editors and persistent controls outside."
+      "stateBoundary": "Only outgoing and incoming children remount; outgoing content is inert while it exits. Keep editors and persistent controls outside."
     },
     {
       "name": "MotionFeedback",
@@ -102,7 +102,7 @@
     {
       "name": "MotionCelebration",
       "intent": "celebrate",
-      "trigger": "trigger increments after a milestone",
+      "trigger": "trigger increments after a milestone, or the view mounts with trigger above previousTrigger",
       "usage": "A bounded, decorative burst for completed milestones.",
       "requiredProps": [
         "trigger"
@@ -116,6 +116,7 @@
     }
   ],
   "planSchema": "schemas/motion-plan.schema.json",
+  "planValidator": "motion-for-agents-validate",
   "skill": "skills/motion-for-agents/SKILL.md",
   "constraints": [
     "No continuous loops",

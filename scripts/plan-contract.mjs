@@ -7,7 +7,9 @@ const validateSchema = new Ajv({ allErrors: true, strict: true }).compile(schema
 /** Validate shape, canonical component choices, and unique transition IDs. */
 export function validatePlan(plan) {
   if (!validateSchema(plan)) {
-    return validateSchema.errors.map(error => `${error.instancePath || '/'} ${error.message}`);
+    return validateSchema.errors.map(error => error.keyword === 'false schema'
+      ? `${error.instancePath} is not supported for this intent`
+      : `${error.instancePath || '/'} ${error.message}`);
   }
   const errors = [];
   const seen = new Set();

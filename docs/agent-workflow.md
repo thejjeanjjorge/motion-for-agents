@@ -40,19 +40,23 @@ The v0.1 format is:
 }
 ```
 
-Allowed presets are `quiet`, `spring`, and `celebration`. Reduced-motion policies are `user` and `always`. Transition intents are `reveal`, `navigate`, `feedback`, `press`, `progress`, and `celebrate`. IDs, targets, triggers, and component names are explicit strings; `notes` is optional. Do not add custom durations to this format.
+Allowed presets are `quiet`, `spring`, and `celebration`. Reduced-motion policies are `user` and `always`. Transition intents are `reveal`, `navigate`, `feedback`, `press`, `progress`, and `celebrate`. IDs, targets, triggers, and component names are explicit strings; `notes` is optional. A transition may set `preset` to override the plan preset for its component, except for `celebrate`, because `MotionCelebration` has no preset. Do not add custom durations to this format.
 
 Targets describe the intended boundary; the validator does not resolve them against source code. Write triggers as concrete state changes or user actions, not vague phrases such as "make it beautiful."
 
+In an app that installed the package, run the bundled validator. `--no` stops npx from downloading an unrelated registry package if the kit is missing:
+
 ```sh
-npm run plan:validate -- path/to/plan.json
+npx --no motion-for-agents-validate path/to/plan.json
 ```
+
+In this source repository, use `npm run plan:validate -- path/to/plan.json`.
 
 Plans never grant permission to edit a different app, install packages globally, change licensing, publish a package, or deploy a site. Follow the user's existing authorization for those actions.
 
 ## Implement and verify
 
-Use `MotionProvider` at a stable boundary and prefer a provided component over new timing code. Use `getMotionRecipe` with the resolved settings for a custom semantic wrapper. Keep component names, intent names, and the installed API consistent.
+Use `MotionProvider` at a stable boundary and prefer a provided component over new timing code. Use `getMotionRecipe` with the resolved settings for a custom semantic wrapper. Keep component names, intent names, and the installed API consistent. When a milestone opens a new view, such as a results screen, pass `previousTrigger` so `MotionCelebration` bursts once as that view mounts.
 
 Verify the change under keyboard interaction and reduced motion. Confirm that essential content is immediately accessible, query output is not held back by animation, and switching content does not lose editor state or focus. Verify disabled buttons, progress bounds, and one-shot celebration when they are involved.
 

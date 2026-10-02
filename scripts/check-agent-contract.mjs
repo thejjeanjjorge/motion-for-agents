@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import { PRESETS, MOTION_INTENTS, getMotionRecipe } from '../dist/index.js';
@@ -16,6 +16,7 @@ assert.deepEqual(catalog.presets, Object.values(PRESETS), 'Catalog presets diffe
 assert.deepEqual(catalog.components.map(item => item.intent).slice(0, 4), Object.keys(MOTION_INTENTS));
 for (const { name } of catalog.components) assert.ok(library[name], `${name} is not exported`);
 assert.deepEqual(schema.properties.preset.enum, catalog.presets.map(item => item.id), 'Schema preset vocabulary drifted');
+assert.deepEqual(schema.properties.transitions.items.properties.preset.enum, catalog.presets.map(item => item.id), 'Schema transition preset vocabulary drifted');
 assert.deepEqual(schema.properties.transitions.items.properties.intent.enum, catalog.components.map(item => item.intent), 'Schema intent vocabulary drifted');
 assert.deepEqual(schema.properties.transitions.items.properties.component.enum, catalog.components.map(item => item.name), 'Schema component vocabulary drifted');
 for (const { intent, name } of catalog.components) {
@@ -31,6 +32,12 @@ for (const preset of Object.keys(PRESETS)) {
     assert.ok(recipe.transition.duration <= 0.12, 'Reduced fade exceeds 120ms');
   }
 }
+// The plan validator ships with the package so consuming apps can run it.
+const validator = manifest.bin?.['motion-for-agents-validate']?.replace(/^\.\//, '');
+assert.ok(validator && existsSync(join(root, validator)), 'The plan validator bin is missing');
+for (const file of [validator, 'scripts/plan-contract.mjs']) assert.ok(manifest.files.includes(file), `${file} is not packaged`);
+assert.ok(manifest.files.includes('schemas'), 'The plan schema is not packaged');
+assert.ok(manifest.dependencies?.ajv, 'The shipped plan validator needs ajv as a runtime dependency');
 let plans = 0;
 for (const file of readdirSync(join(root, 'docs/examples'))) {
   if (!file.endsWith('.json')) continue;

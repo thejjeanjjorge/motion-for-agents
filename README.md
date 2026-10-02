@@ -97,6 +97,12 @@ npm run plan:validate -- docs/examples/plan.json
 npm run agent:check
 ```
 
+An app that installed the package can validate its own plan with the bundled command. `--no` stops npx from downloading an unrelated registry package if the kit is missing:
+
+```sh
+npx --no motion-for-agents-validate motion.plan.json
+```
+
 The validator checks plan structure and supported vocabulary. It does not inspect the target app, grant permission to edit it, or establish that a transition is accessible. The [agent workflow](docs/agent-workflow.md) covers implementation and review.
 
 ## Verify changes
@@ -113,7 +119,7 @@ npm run test:e2e
 
 - React first, with unstyled animation essentials and a local Vite playground.
 - Presets: `quiet`, `spring`, and `celebration`; standard recipes: `reveal`, `navigate`, `feedback`, and `press`.
-- Bounded progress and celebration components; celebration starts only when its numeric trigger increases.
+- Bounded progress and celebration components; celebration starts only when its numeric trigger increases, either while mounted or, through `previousTrigger`, when a milestone opens a new view.
 - No custom duration fields in the v0.1 plan format, full design system, hosted API, or published npm release.
 - License metadata is currently `UNLICENSED`. A distribution license has not been selected.
 

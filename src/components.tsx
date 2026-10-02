@@ -3,6 +3,7 @@
 import {
   forwardRef,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type CSSProperties,
@@ -16,6 +17,9 @@ type OwnedAnimationProps = "initial" | "animate" | "exit" | "transition" | "vari
 type PresetOverride = { preset?: MotionPreset };
 
 const noTransform = () => "none";
+
+// Layout effects run before the browser handles the next input event; servers have no DOM to update.
+const useBeforeNextInput = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 /** Motion caches its transform policy at mount. Keep owned elements under a
  * stable policy and implement reduced motion ourselves so it can change live. */
@@ -109,8 +113,15 @@ function SwitchContent({ preset, children }: { preset?: MotionPreset; children: 
   // Replacing animate/exit targets during an exit can cancel Motion's presence
   // completion. Keep that recipe stable while suppressing its transform live.
   const activeRecipe = isPresent ? recipe : lastPresentRecipe.current;
+  const element = useRef<HTMLDivElement>(null);
+  // Outgoing content stays visible while it exits. Making it inert stops a quick
+  // second click or key press from repeating the action that replaced it. The
+  // attribute is set directly because React 18 and 19 serialize `inert` differently.
+  useBeforeNextInput(() => {
+    element.current?.toggleAttribute("inert", !isPresent);
+  }, [isPresent]);
   return (
-    <OwnMotion><motion.div {...activeRecipe} transformTemplate={settings.reducedMotion ? noTransform : undefined}>
+    <OwnMotion><motion.div {...activeRecipe} ref={element} transformTemplate={settings.reducedMotion ? noTransform : undefined}>
       <ContentMotionPolicy>{children}</ContentMotionPolicy>
     </motion.div></OwnMotion>
   );
@@ -199,8 +210,14 @@ export function MotionProgress({
 }
 
 export interface MotionCelebrationProps {
-  /** Increment for a new achievement. The initial value never fires a burst. */
+  /** Increment for a new achievement. */
   trigger: number;
+  /**
+   * The trigger's value before this component mounted. Defaults to `trigger`, so
+   * mounting never fires a burst. Pass the earlier value when this view mounts
+   * because of the milestone, such as a results screen, to burst once on mount.
+   */
+  previousTrigger?: number;
   children?: ReactNode;
   className?: string;
 }
@@ -219,34 +236,36 @@ const particleBase: CSSProperties = {
   backgroundColor: "currentColor",
 };
 
+function increased(trigger: number, previous: number): boolean {
+  return Number.isFinite(trigger) && Number.isFinite(previous) && trigger > previous;
+}
+
 /**
  * One finite, decorative burst per increasing trigger. Children carry meaning;
  * particles are never exposed to assistive technology. Device reduced motion
  * suppresses the burst completely, including one already in progress.
  */
-export function MotionCelebration({ trigger, children, className }: MotionCelebrationProps) {
+export function MotionCelebration({ trigger, previousTrigger, children, className }: MotionCelebrationProps) {
   const { reducedMotion } = useMotionSettings();
-  const previousTrigger = useRef(trigger);
+  const lastTrigger = useRef(trigger);
   const burstSequence = useRef(0);
-  const [burst, setBurst] = useState<number | null>(null);
+  // A burst owed at mount starts in initial state, so Strict Mode's repeated
+  // mount effects cannot cancel it.
+  const [burst, setBurst] = useState<number | null>(() =>
+    !reducedMotion && increased(trigger, previousTrigger ?? trigger) ? 0 : null);
 
   useEffect(() => {
-    const previous = previousTrigger.current;
-    previousTrigger.current = trigger;
+    const previous = lastTrigger.current;
+    lastTrigger.current = trigger;
+    if (reducedMotion || !Number.isFinite(trigger) || trigger < previous) setBurst(null);
+    else if (increased(trigger, previous)) setBurst(++burstSequence.current);
+  }, [trigger, reducedMotion]);
 
-    if (
-      reducedMotion || !Number.isFinite(trigger) ||
-      !Number.isFinite(previous) || trigger <= previous
-    ) {
-      setBurst(null);
-      return;
-    }
-
-    const sequence = ++burstSequence.current;
-    setBurst(sequence);
+  useEffect(() => {
+    if (burst === null) return;
     const timer = setTimeout(() => setBurst(null), burstLifetime);
     return () => clearTimeout(timer);
-  }, [trigger, reducedMotion]);
+  }, [burst]);
 
   return (
     <div className={className} style={{ position: "relative" }}>

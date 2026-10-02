@@ -44,3 +44,22 @@ test('the public CLI rejects invented settings', () => {
   expect(result.status).toBe(1);
   expect(result.stderr).toContain('additional properties');
 });
+
+test('the public CLI accepts a per-transition preset override', () => {
+  const result = validate({ ...plan, transitions: [{ ...plan.transitions[0], preset: 'celebration' }] });
+  expect(result.status).toBe(0);
+});
+
+test('the public CLI rejects an unknown preset override', () => {
+  const result = validate({ ...plan, transitions: [{ ...plan.transitions[0], preset: 'bouncy' }] });
+  expect(result.status).toBe(1);
+  expect(result.stderr).toContain('/transitions/0/preset');
+});
+
+test('the public CLI rejects a preset on a celebration, which has no preset', () => {
+  const celebrate = { id: 'level', intent: 'celebrate', target: 'Level badge', trigger: 'Level passed', component: 'MotionCelebration' };
+  const result = validate({ ...plan, transitions: [{ ...celebrate, preset: 'spring' }] });
+  expect(result.status).toBe(1);
+  expect(result.stderr).toContain('/transitions/0/preset is not supported for this intent');
+  expect(validate({ ...plan, transitions: [celebrate] }).status).toBe(0);
+});

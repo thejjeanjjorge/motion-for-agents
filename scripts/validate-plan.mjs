@@ -1,8 +1,9 @@
+#!/usr/bin/env node
 import { readPlan, validatePlan } from './plan-contract.mjs';
 
 const paths = process.argv.slice(2);
 if (paths.length === 0) {
-  console.error('Usage: npm run plan:validate -- path/to/plan.json [another-plan.json]');
+  console.error('Usage: motion-for-agents-validate path/to/plan.json [another-plan.json]');
   process.exitCode = 1;
 }
 for (const path of paths) {

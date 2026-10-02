@@ -72,6 +72,14 @@
               "MotionProgress",
               "MotionCelebration"
             ]
+          },
+          "preset": {
+            "description": "Optional override of the plan preset for this transition's component.",
+            "enum": [
+              "quiet",
+              "spring",
+              "celebration"
+            ]
           }
         },
         "allOf": [
@@ -185,7 +193,8 @@
               "properties": {
                 "component": {
                   "const": "MotionCelebration"
-                }
+                },
+                "preset": false
               }
             }
           }
