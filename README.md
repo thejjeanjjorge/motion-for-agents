@@ -2,7 +2,7 @@
 
 A small React motion kit with explicit intents, three presets, and a portable skill for coding agents. Use it to add consistent feedback and transitions to an existing interface without adopting a component theme or CSS framework.
 
-The package is `@motion-for-agents/react`. This is an early, private source repository: npm publication and hosted services are not provided. The local playground lets you compare **Quiet**, **Spring**, and **Celebration** before applying them to an app.
+The package is `@motion-for-agents/react`. This is an early source repository: npm publication and hosted services are not provided. The local playground lets you compare **Quiet**, **Spring**, and **Celebration** before applying them to an app.
 
 ## Run the playground
 
@@ -31,13 +31,15 @@ Then, from an existing React app, install the tarball and Motion:
 npm install /absolute/path/to/motion-for-agents/motion-for-agents-react-0.1.0.tgz motion
 ```
 
-You can also install directly from the private GitHub repository if your GitHub account has access:
+You can also install directly from GitHub:
 
 ```sh
 npm install git+https://github.com/thejjeanjjorge/motion-for-agents.git motion
 ```
 
-Git installation runs the package's `prepare` command to build the library from source. Prefer a commit reference, such as `#COMMIT_SHA`, when you need a reproducible installation. This repository has `private: true`, which prevents accidental npm publication while allowing `npm pack` and local installation.
+Git installation runs the package's `prepare` command to build the library from source. Prefer a commit reference, such as `#COMMIT_SHA`, when you need a reproducible installation. Authentication is needed if installing from a private repository.
+
+The package manifest has `private: true`, which prevents accidental npm publication while allowing `npm pack` and local installation. That npm package flag is independent of GitHub repository visibility.
 
 Here is a minimal example:
 

@@ -2,7 +2,7 @@
 
 These instructions apply to `motion-for-agents` only. They do not authorize changes to a consuming app, global agent configuration, repository visibility, or publication.
 
-This is an early, private React library and local playground. The package is `@motion-for-agents/react`; keep `private: true` and `UNLICENSED` until the user requests a publication or license change.
+This is an early React source repository and local playground. The package is `@motion-for-agents/react`; keep the package manifest's `private: true` and `UNLICENSED` until the user requests a publication or license change. The npm `private` flag prevents package publication independently of GitHub repository visibility.
 
 ## Contracts
 

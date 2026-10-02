@@ -58,4 +58,4 @@ Verify the change under keyboard interaction and reduced motion. Confirm that es
 
 Run the consuming app's relevant checks and review the actual interaction. For changes in this library, run `npm run check`; run `npm run test:e2e` for browser behavior changes and `npm run agent:check` for catalog or committed plan changes. Validation of a JSON plan is structural, not a substitute for interaction review.
 
-Report the boundaries changed, the intended visual effect, the checks completed, and any remaining limitation. Keep installation and publication claims accurate: this is a private, unpublished React package with a local playground.
+Report the boundaries changed, the intended visual effect, the checks completed, and any remaining limitation. Keep installation and publication claims accurate: this is an early source repository for an unpublished React package with a local playground. The package manifest's `private: true` blocks npm publication independently of GitHub repository visibility.

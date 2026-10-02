@@ -1,6 +1,6 @@
 # Portable API reference
 
-Package: `@motion-for-agents/react`. Supports React `^18.2.0 || ^19.0.0`; Motion is also a peer dependency. Repository testing uses React 19.3 and Motion 13.5.1. Install from a built local tarball or an authorized private Git URL; no npm release or hosted API is provided.
+Package: `@motion-for-agents/react`. Supports React `^18.2.0 || ^19.0.0`; Motion is also a peer dependency. Repository testing uses React 19.3 and Motion 13.5.1. Install from a built local tarball or a Git URL; authentication is needed if the source repository is private. No npm release or hosted API is provided. The package manifest's `private: true` blocks npm publication independently of GitHub repository visibility.
 
 ## Settings
 
