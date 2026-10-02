@@ -1,0 +1,128 @@
+{
+  "version": 1,
+  "package": "@motion-for-agents/react",
+  "packageVersion": "0.1.0",
+  "framework": "react",
+  "defaults": {
+    "preset": "quiet",
+    "reducedMotion": "user"
+  },
+  "reducedMotion": {
+    "modes": [
+      "user",
+      "always"
+    ],
+    "behavior": "Keep short fades; disable displacement, scale, springs, and decorative particles."
+  },
+  "presets": [
+    {
+      "id": "quiet",
+      "label": "Quiet",
+      "description": "Short fades and small movements that keep attention on the task.",
+      "duration": 0.18,
+      "feedbackDuration": 0.2,
+      "distance": 6,
+      "pressScale": 0.98
+    },
+    {
+      "id": "spring",
+      "label": "Spring",
+      "description": "A responsive, gently springing feel for direct interaction.",
+      "duration": 0.28,
+      "feedbackDuration": 0.32,
+      "distance": 10,
+      "pressScale": 0.96,
+      "spring": {
+        "stiffness": 420,
+        "damping": 32,
+        "mass": 0.8
+      }
+    },
+    {
+      "id": "celebration",
+      "label": "Celebration",
+      "description": "A little more lift for milestones and rewarding feedback.",
+      "duration": 0.36,
+      "feedbackDuration": 0.4,
+      "distance": 14,
+      "pressScale": 0.95,
+      "spring": {
+        "stiffness": 340,
+        "damping": 24,
+        "mass": 0.8
+      }
+    }
+  ],
+  "components": [
+    {
+      "name": "MotionReveal",
+      "intent": "reveal",
+      "trigger": "New content mounts",
+      "usage": "Cards, result panels, and newly added content.",
+      "requiredProps": [],
+      "stateBoundary": "Mount once around newly introduced content."
+    },
+    {
+      "name": "MotionSwitch",
+      "intent": "navigate",
+      "trigger": "transitionKey changes",
+      "usage": "Steps, questions, tabs, and local view changes.",
+      "requiredProps": [
+        "transitionKey"
+      ],
+      "stateBoundary": "Only outgoing and incoming children remount; keep editors and persistent controls outside."
+    },
+    {
+      "name": "MotionFeedback",
+      "intent": "feedback",
+      "trigger": "A result message mounts",
+      "usage": "Success messages, validation errors, and status updates.",
+      "requiredProps": [],
+      "semantics": "status for success/info; alert for error"
+    },
+    {
+      "name": "MotionButton",
+      "intent": "press",
+      "trigger": "Pointer or keyboard press",
+      "usage": "A small compression that confirms a button press.",
+      "requiredProps": [],
+      "semantics": "Native button with default type=button"
+    },
+    {
+      "name": "MotionProgress",
+      "intent": "progress",
+      "trigger": "value changes",
+      "usage": "Progress updates with a bounded 0–100 value.",
+      "requiredProps": [
+        "value",
+        "label"
+      ],
+      "semantics": "Named progressbar"
+    },
+    {
+      "name": "MotionCelebration",
+      "intent": "celebrate",
+      "trigger": "trigger increments after a milestone",
+      "usage": "A bounded, decorative burst for completed milestones.",
+      "requiredProps": [
+        "trigger"
+      ],
+      "limits": {
+        "particles": 12,
+        "burstDuration": 0.7,
+        "cleanupAfter": 1
+      },
+      "semantics": "Decorative particles are hidden from assistive technology"
+    }
+  ],
+  "planSchema": "schemas/motion-plan.schema.json",
+  "skill": "skills/motion-for-agents/SKILL.md",
+  "constraints": [
+    "No continuous loops",
+    "Animate transforms and opacity",
+    "Honor reduced motion",
+    "Preserve focus and state",
+    "Preview requested motion before integration",
+    "Use celebration only after an explicit milestone"
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "name": "@motion-for-agents/react",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A React motion toolkit and inspectable motion contracts for coding agents.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thejjeanjjorge/motion-for-agents.git"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./catalog": "./motion.catalog.json",
+    "./plan.schema.json": "./schemas/motion-plan.schema.json",
+    "./skill": "./skills/motion-for-agents/SKILL.md"
+  },
+  "files": [
+    "dist",
+    "motion.catalog.json",
+    "schemas",
+    "skills",
+    "docs"
+  ],
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5184",
+    "preview": "vite preview --host 127.0.0.1 --port 5184",
+    "build:library": "tsup",
+    "build:playground": "vite build",
+    "build": "npm run build:library && npm run build:playground",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "plan:validate": "node scripts/validate-plan.mjs",
+    "agent:check": "npm run build:library && node scripts/check-agent-contract.mjs",
+    "check": "npm run typecheck && npm test && npm run build && node scripts/check-agent-contract.mjs",
+    "prepare": "npm run build:library"
+  },
+  "peerDependencies": {
+    "motion": "^13.5.1",
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0"
+  },
+  "overrides": { "esbuild": "0.28.2" },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "6.1.1",
+    "ajv": "^8.17.1",
+    "jsdom": "^27.0.0",
+    "motion": "13.5.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "tsup": "8.5.1",
+    "typescript": "~5.8.3",
+    "vite": "8.3.2",
+    "vitest": "5.0.3"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "preset": "quiet",
+  "reducedMotion": "user",
+  "transitions": [
+    {
+      "id": "lesson-heading",
+      "intent": "reveal",
+      "target": "LessonHeading",
+      "trigger": "Lesson heading first appears",
+      "component": "MotionReveal"
+    },
+    {
+      "id": "lesson-summary",
+      "intent": "navigate",
+      "target": "LessonSummary",
+      "trigger": "Selected lesson id changes",
+      "component": "MotionSwitch"
+    },
+    {
+      "id": "query-result-status",
+      "intent": "feedback",
+      "target": "QueryResultStatus",
+      "trigger": "Query validation produces a result",
+      "component": "MotionFeedback"
+    },
+    {
+      "id": "run-query-button",
+      "intent": "press",
+      "target": "RunQueryButton",
+      "trigger": "User presses the enabled run-query button",
+      "component": "MotionButton"
+    },
+    {
+      "id": "chapter-progress",
+      "intent": "progress",
+      "target": "ChapterProgress",
+      "trigger": "Completed lesson count changes",
+      "component": "MotionProgress"
+    },
+    {
+      "id": "chapter-complete",
+      "intent": "celebrate",
+      "target": "ChapterCompletionAction",
+      "trigger": "Chapter first becomes complete and the finite numeric trigger increments",
+      "component": "MotionCelebration"
+    }
+  ],
+  "notes": [
+    "This example is a plan, not authorization to modify an app.",
+    "Keep the query editor mounted outside MotionSwitch.",
+    "Preserve immediate query output, keyboard focus, and textual status under reduced motion.",
+    "Do not trigger celebration during initial render or from a background timer."
+  ]
+}
