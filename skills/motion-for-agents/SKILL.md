@@ -9,7 +9,7 @@ Use this kit to give an existing React interface consistent action feedback and 
 
 ## Choose the boundary
 
-Read the target project's instructions, package manifest, and relevant components. Confirm that the kit fits the installed React version and existing motion tools. Keep stateful editors, persistent forms, focus, and scroll stable; do not key a switched editor subtree to replay an animation.
+Read the target project's instructions, package manifest, and relevant components. Confirm that the kit fits the installed React version and existing motion tools; it needs Motion `^13.5.1`. Keep stateful editors, persistent forms, focus, and scroll stable; do not key a switched editor subtree to replay an animation.
 
 Map a concrete action or state change to an intent: `reveal`, `navigate`, `feedback`, or `press`. Use `progress` and `celebrate` only with their dedicated components. Choose `quiet` for frequent interactions, `spring` for more expressive movement, and `celebration` for occasional milestones. Treat these as defaults, not a mandate to animate every element.
 

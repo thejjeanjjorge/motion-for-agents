@@ -1,6 +1,6 @@
 # React API
 
-Import public APIs from `@motion-for-agents/react`. React 18.2 or React 19 and Motion are peer dependencies; React 19.3 and Motion 13.5.1 are the tested versions in this repository. Components provide motion behavior and semantic HTML, with no theme or Tailwind requirement.
+Import public APIs from `@motion-for-agents/react`. React 18.2 or React 19 and Motion 13 (`^13.5.1`) are peer dependencies; React 19.3 and Motion 13.5.1 are the tested versions in this repository. Components provide motion behavior and semantic HTML, with no theme or Tailwind requirement.
 
 ## Presets and intents
 

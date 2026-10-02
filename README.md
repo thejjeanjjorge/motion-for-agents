@@ -17,7 +17,7 @@ Open the local URL printed by Vite. The playground is a demonstration; the libra
 
 ## Use the library in a React app
 
-React 18.2 or React 19 and Motion are peer dependencies. The repository is tested with React 19.3 and Motion 13.5.1.
+React 18.2 or React 19 and Motion 13 (`^13.5.1`) are peer dependencies. The repository is tested with React 19.3 and Motion 13.5.1. Install Motion with that range: a bare `motion` now resolves to Motion 14, which the kit has not been tested with.
 
 Build a local tarball from this repository:
 
@@ -28,13 +28,13 @@ npm pack
 Then, from an existing React app, install the tarball and Motion:
 
 ```sh
-npm install /absolute/path/to/motion-for-agents/motion-for-agents-react-0.1.0.tgz motion
+npm install /absolute/path/to/motion-for-agents/motion-for-agents-react-0.1.0.tgz motion@^13.5.1
 ```
 
 You can also install directly from GitHub:
 
 ```sh
-npm install git+https://github.com/thejjeanjjorge/motion-for-agents.git motion
+npm install git+https://github.com/thejjeanjjorge/motion-for-agents.git motion@^13.5.1
 ```
 
 Git installation runs the package's `prepare` command to build the library from source. Prefer a commit reference, such as `#COMMIT_SHA`, when you need a reproducible installation. Authentication is needed if installing from a private repository.
